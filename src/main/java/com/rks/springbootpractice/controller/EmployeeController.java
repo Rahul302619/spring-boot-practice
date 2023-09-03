@@ -12,7 +12,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
-@RequestMapping("employee")
+@RequestMapping("authenticate/employee")
 @AllArgsConstructor
 public class EmployeeController {
 
