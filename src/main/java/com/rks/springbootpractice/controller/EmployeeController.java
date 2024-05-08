@@ -8,18 +8,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("authenticate/employee")
 @AllArgsConstructor
+@Transactional(Transactional.TxType.REQUIRED)
 public class EmployeeController {
 
     private EmployeeService employeeService;
 
     @GetMapping
     public ResponseEntity getEmployee(@RequestParam(defaultValue = "") String id) {
+        employeeService.logInfoMessage("getEmployee api invoked");
         return !StringUtils.isNumeric(id) ?
                 status(OK).body(employeeService.getAllEmployees()) :
                 status(OK).body(employeeService.getEmployeeById(Long.valueOf(id.trim())));
@@ -33,7 +37,10 @@ public class EmployeeController {
 
     @PutMapping
     @ResponseStatus(OK)
-    public Employee updateEmployee(@RequestBody EmployeeDto employeeDto) {
+    public Employee updateEmployee(@RequestParam(defaultValue = "") String id,
+                                   @RequestBody EmployeeDto employeeDto) {
+
+        //In case of update it is a good practice to pass id in the url
         return employeeService.updateEmployee(employeeDto);
     }
 
