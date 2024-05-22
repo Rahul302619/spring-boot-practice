@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
-@RequestMapping("authenticate/employee")
+@RequestMapping("authenticate/employees")
 @AllArgsConstructor
 @Transactional(Transactional.TxType.REQUIRED)
 public class EmployeeController {
@@ -44,9 +44,9 @@ public class EmployeeController {
         return employeeService.updateEmployee(employeeDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("{id}")
     @ResponseStatus(NO_CONTENT)
-    public void deleteEmployee(@RequestParam Long id) {
+    public void deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployeeById(id);
     }
 }

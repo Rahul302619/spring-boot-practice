@@ -4,22 +4,25 @@ import com.rks.springbootpractice.entity.Employee;
 import com.rks.springbootpractice.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.ResponseEntity;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+/*
+* It will initialize the mock object and also initialize InjectMock object by injecting the mock object into it
+* */
+@ExtendWith(MockitoExtension.class)
 class EmployeeControllerTest {
 
-    @LocalServerPort
-    private int port;
+    private MockMvc mockMvc;
 
     @Mock
     private EmployeeService service;
@@ -28,26 +31,44 @@ class EmployeeControllerTest {
     private EmployeeController controller;
 
     @BeforeEach
-    void setUp() {}
-
-    @Test
-    void getEmployee() {
-        Employee employee = new Employee();
-        List<Employee> emptyList = List.of();
-        Mockito.when(service.getAllEmployees()).thenReturn(emptyList);
-        Mockito.when(service.getEmployeeById(Mockito.anyLong())).thenReturn(employee);
-        Mockito.doNothing().when(service).logInfoMessage(Mockito.anyString());
-        List response = (List) controller.getEmployee("").getBody();
-        Employee response1 = (Employee) controller.getEmployee("1").getBody();
-        Mockito.verify(service, Mockito.times(2)).logInfoMessage(Mockito.anyString());
-        assertThat(response).isEqualTo(emptyList);
-        assertThat(response1).isEqualTo(employee);
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
     @Test
-    void deleteEmployee() {
+    void getEmployee() throws Exception {
+        Mockito.doNothing().when(service).logInfoMessage(Mockito.anyString());
+        Mockito.when(service.getEmployeeById(Mockito.anyLong())).thenReturn(buildEmployee());
+        mockMvc.perform(MockMvcRequestBuilders.get("/authenticate/employees").param("id", "2"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(2L));
+        Mockito.verify(service, Mockito.times(1)).logInfoMessage(Mockito.anyString());
+    }
+
+    @Test
+    void getEmployees() throws Exception {
+        Mockito.doNothing().when(service).logInfoMessage(Mockito.anyString());
+        Mockito.when(service.getAllEmployees()).thenReturn(List.of(buildEmployee()));
+        mockMvc.perform(MockMvcRequestBuilders.get("/authenticate/employees"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(2L));
+        Mockito.verify(service, Mockito.times(1)).logInfoMessage(Mockito.anyString());
+    }
+
+    @Test
+    void deleteEmployee() throws Exception {
         Mockito.doNothing().when(service).deleteEmployeeById(Mockito.anyLong());
-        controller.deleteEmployee(1L);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/authenticate/employees/2"))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
         Mockito.verify(service, Mockito.times(1)).deleteEmployeeById(Mockito.anyLong());
+    }
+
+    private Employee buildEmployee() {
+        var employee = new Employee();
+        employee.setId(2L);
+        employee.setName("Test");
+        employee.setDepartment("Test");
+        employee.setAddress("Test");
+        return employee;
     }
 }
