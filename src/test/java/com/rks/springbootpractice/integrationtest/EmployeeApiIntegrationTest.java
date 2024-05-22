@@ -35,7 +35,7 @@ public class EmployeeApiIntegrationTest {
     }
 
     @Test
-    @WithMockUser(username = "rahul")
+    @WithMockUser(username = "test")
     void getEmployee() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/authenticate/employees"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
