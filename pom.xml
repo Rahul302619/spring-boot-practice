@@ -93,6 +93,9 @@
     <build>
         <plugins>
             <plugin>
+                <!--This plugin is used to create executable jar file
+                Executable jar file = normal jar(.class with resources) + all dependencies
+                required to run application-->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>

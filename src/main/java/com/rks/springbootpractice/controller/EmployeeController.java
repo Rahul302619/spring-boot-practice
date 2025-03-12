@@ -21,6 +21,16 @@ public class EmployeeController {
 
     private EmployeeService employeeService;
 
+    /*
+    * Path parameters are part of the URL path and are often used for identifying specific resources.
+    * They are typically used when:
+    * 1) Resource Identification: /employee/123
+    * 2) Hierarchical Relationships: /department/5/employee/10
+    * */
+
+    /*
+    * Query parameters are appended to the URL and are typically used for filtering, sorting, and other optional parameters.
+    * */
     @GetMapping
     public ResponseEntity getEmployee(@RequestParam(defaultValue = "") String id) {
         employeeService.logInfoMessage("getEmployee api invoked");
@@ -28,6 +38,7 @@ public class EmployeeController {
                 status(OK).body(employeeService.getAllEmployees()) :
                 status(OK).body(employeeService.getEmployeeById(Long.valueOf(id.trim())));
     }
+
 
     @PostMapping
     @ResponseStatus(CREATED)

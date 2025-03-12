@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @DataJpaTest
 class EmployeeRepositoryTest {
 
@@ -16,16 +14,7 @@ class EmployeeRepositoryTest {
 
     @Test
     void findByName() {
-        employeeRepository.save(buildEmployee());
-        Employee employee = employeeRepository.findByName("Test");
-        Assertions.assertThat(employee.getName()).isEqualTo("Test");
-    }
-
-    private Employee buildEmployee() {
-        var employee = new Employee();
-        employee.setName("Test");
-        employee.setDepartment("Test");
-        employee.setAddress("Test");
-        return employee;
+        Employee employee = employeeRepository.findByName("Rahul Singh");
+        Assertions.assertThat(employee.getName()).isEqualTo("Rahul Singh");
     }
 }

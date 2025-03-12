@@ -38,11 +38,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate/**").authenticated()
+                .authorizeRequests()
+                .antMatchers("/authenticate/**").authenticated()
+                .anyRequest().permitAll()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 // Add a filter to validate the tokens with every request
                 .and().addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.headers().frameOptions().disable();
     }
 
     @Bean

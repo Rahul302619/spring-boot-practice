@@ -1,4 +1,4 @@
-package com.rks.springbootpractice.migration;
+package com.rks.springbootpractice.batch.migration;
 
 import com.rks.springbootpractice.entity.Clause;
 import com.rks.springbootpractice.entity.Term;
@@ -7,7 +7,6 @@ import com.rks.springbootpractice.repository.TermRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -25,7 +24,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.HashMap;
 
 @Configuration
-@EnableBatchProcessing
 @AllArgsConstructor
 public class ClauseToTermMigrationConfig {
     private JobBuilderFactory jobBuilderFactory;

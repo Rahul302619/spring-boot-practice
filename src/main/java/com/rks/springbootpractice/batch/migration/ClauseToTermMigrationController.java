@@ -1,4 +1,4 @@
-package com.rks.springbootpractice.migration;
+package com.rks.springbootpractice.batch.migration;
 
 
 import lombok.AllArgsConstructor;
